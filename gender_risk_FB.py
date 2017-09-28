@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score
+from sklearn.calibration import CalibratedClassifierCV
 
 prediction_models = ['lr', 'rf', 'knn', 'svc']
 
@@ -16,9 +17,9 @@ if __name__ == "__main__":
 	print(users_df.sample(10))
 	print("total number of users: ", len(users_df))
 
-	lr = LogisticRegression()
-	rf = RandomForestClassifier(10)
-	svc = SVC(probability=True)
+	lr = CalibratedClassifierCV(LogisticRegression(), cv=5)
+	rf = CalibratedClassifierCV(RandomForestClassifier(50), cv=5)
+	svc = CalibratedClassifierCV(SVC(probability=True), cv=5)
 	risk_models = [lr, rf, svc]
 	risk_model_names = ['lr', 'rf', 'svc']
 
@@ -59,4 +60,6 @@ if __name__ == "__main__":
 				best_model = k
 
 		users_df[predict_model+'_risk_proba'] = predict_disclosure_proba[:, best_model]
-	print(users_df.sample(10))
+	
+	users_df.to_pickle('./data/users_with_risk_proba.pkl')
+	print(users_df.sample(100))
