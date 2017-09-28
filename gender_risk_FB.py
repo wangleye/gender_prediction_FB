@@ -59,4 +59,4 @@ if __name__ == "__main__":
 				best_model = k
 
 		users_df[predict_model+'_risk_proba'] = predict_disclosure_proba[:, best_model]
-		print(users_df.sample(10))
+	print(users_df.sample(10))
