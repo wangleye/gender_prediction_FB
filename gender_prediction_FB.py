@@ -11,7 +11,7 @@ from sklearn.preprocessing import Imputer
 features = ['musicscore', 'moviescore', 'bookscore', 'televisionscore', 'gamescore']
 
 def load_users_with_interest_scores():
-	return pd.read_pickle('./data/users_with_gender_interest_score.pkl')
+	return pd.read_pickle('./data/users_with_gender_interest_score_20000.pkl')
 
 if __name__ == "__main__":
 	users_df = load_users_with_interest_scores()
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 		users_df[classifier_names[k]+'_predict_y_proba'] = predict_y_proba[:, k]
 
 	print(users_df.sample(10))
-	users_df.to_pickle('./data/users_with_gender_prediction.pkl')
+	users_df.to_pickle('./data/users_with_gender_prediction_20000.pkl')
 
 	
 

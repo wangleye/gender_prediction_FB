@@ -98,4 +98,7 @@ def interest_item_to_gender(interest_i, min_count=5): # min_count: the interest 
 
 if __name__ == "__main__":
 	interest_ind = load_interest_indication_dict()
-	generate_user_interest_feature()
+	users_df = load_users_with_interest_scores()
+	users_df_sample = users_df.sample(20000).reset_index(drop=True)
+	users_df_sample.to_pickle('./data/users_with_gender_interest_score_20000.pkl')
+	print(users_df_sample.sample(10))
