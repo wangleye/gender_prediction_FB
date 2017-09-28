@@ -6,19 +6,24 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score, KFold
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import Imputer
 
 features = ['musicscore', 'moviescore', 'bookscore', 'televisionscore', 'gamescore']
 
 def load_users_with_interest_scores():
-	return pd.read_pickle('./data/users_with_gender_interest_score_10000.pkl')
+	return pd.read_pickle('./data/users_with_gender_interest_score.pkl')
 
 if __name__ == "__main__":
 	users_df = load_users_with_interest_scores()
+	users_df['nan_count'] = users_df.isnull().sum(axis=1) # count nan count for each user (row)
+	users_df = users_df[users_df['nan_count'] < 5] # users in the training and test at least get one score
+	users_df = users_df.reset_index(drop=True) # re-index all the users
 	print(users_df.sample(10))
 	print("total number of users: ", len(users_df))
 
+	mean_imputer = Imputer()
 	y = np.array(users_df['gender'])
-	X = np.array(users_df[features])
+	X = mean_imputer.fit_transform(np.array(users_df[features]))  # fit missing values to global average
 
 	lr = LogisticRegression()
 	rf = RandomForestClassifier(100)

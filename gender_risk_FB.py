@@ -31,13 +31,14 @@ if __name__ == "__main__":
 		is_correct_predict = (users_df[predict_model+"_predict_y"] == users_df['gender']).astype(int)
 		predict_confidence = users_df[predict_model+"_predict_y_proba"]
 		predict_advantage = (users_df[predict_model+"_predict_y_proba"]+1)/(2-users_df[predict_model+"_predict_y_proba"])
-		has_music = (users_df['musicscore'] != -1.0).astype(int)
-		has_movie = (users_df['moviescore'] != -1.0).astype(int)
-		has_book = (users_df['bookscore'] != -1.0).astype(int)
-		has_game = (users_df['gamescore'] != -1.0).astype(int)
+		has_music = (users_df['musicscore'] >= 0.0).astype(int)
+		has_movie = (users_df['moviescore'] >= 0.0).astype(int)
+		has_book = (users_df['bookscore'] >= 0.0).astype(int)
+		has_game = (users_df['gamescore'] >= 0.0).astype(int)
 		has_tv = (users_df['televisionscore'] != -1.0).astype(int)
 		risk_X = np.transpose([predict_confidence, predict_advantage, has_music, has_movie, has_book, has_game, has_tv])
 		risk_y = is_correct_predict
+		print(has_book)
 
 		predict_disclosure = np.zeros((len(users_df), len(risk_models)))
 		predict_disclosure_proba = np.zeros((len(users_df), len(risk_models)))

@@ -96,7 +96,6 @@ def interest_item_to_gender(interest_i, min_count=5): # min_count: the interest 
 	else:
 		return gender1*1.0/total_liked_user_num, 1.0/np.log(total_liked_user_num) # besides score, also return weight 1/log(N)
 
-
 if __name__ == "__main__":
 	interest_ind = load_interest_indication_dict()
 	generate_user_interest_feature()
