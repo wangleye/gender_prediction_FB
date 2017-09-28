@@ -50,6 +50,3 @@ if __name__ == "__main__":
 
 	print(users_df.sample(10))
 	users_df.to_pickle('./data/users_with_gender_prediction_20000.pkl')
-
-	
-
