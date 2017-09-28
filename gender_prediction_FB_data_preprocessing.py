@@ -58,7 +58,7 @@ def generate_interest_indication_matrix():
 def generate_user_interest_feature():
 	users_df = load_users()
 	for interest in interest_names:
-		users_df[interest+'score'] = None
+		users_df[interest+'score'] = np.nan
 	for index, row in users_df.iterrows():
 		for interest in interest_names:
 			score = []
@@ -85,8 +85,8 @@ def load_interest_indication_dict():
 def load_users_with_interest_scores():
 	return pd.read_pickle('./data/users_with_gender_interest_score.pkl')
 
-def interest_item_to_gender(interest_i, min_count=10): # min_count: the interest whose liked user number smaller than it will not be considered
-	if interest_i not in interest_ind:
+def interest_item_to_gender(interest_i, min_count=5): # min_count: the interest whose liked user number smaller than it will not be considered
+	if (interest_i not in interest_ind) or (interest_i.strip() == ''):
 		return None, None
 	gender1 = interest_ind[interest_i][1]
 	gender2 = interest_ind[interest_i][2]
