@@ -23,10 +23,10 @@ if __name__ == "__main__":
 	lr = LogisticRegression()
 	rf = RandomForestClassifier(100)
 	svc = SVC()
-	knn = KNeighborsClassifier(5)
+	knn = KNeighborsClassifier(50)
 
 	# classifier_models = [lr, rf, knn, svc]
-	classifier_models = [lr, rf, knn]
+	classifier_models = [lr, rf, knn, svc]
 	classifier_names = ['lr', 'rf', 'knn', 'svc']
 	
 	predict_y = np.zeros((len(users_df), len(classifier_models)))
