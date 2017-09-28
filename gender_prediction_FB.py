@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 features = ['musicscore', 'moviescore', 'bookscore', 'televisionscore', 'gamescore']
 
 def load_users_with_interest_scores():
-	return pd.read_pickle('./data/users_with_gender_interest_score.pkl')
+	return pd.read_pickle('./data/users_with_gender_interest_score_10000.pkl')
 
 if __name__ == "__main__":
 	users_df = load_users_with_interest_scores()
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
 	lr = LogisticRegression()
 	rf = RandomForestClassifier(100)
-	svc = SVC()
+	svc = SVC(probability=True)
 	knn = KNeighborsClassifier(50)
 
 	# classifier_models = [lr, rf, knn, svc]
