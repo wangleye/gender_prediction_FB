@@ -58,16 +58,18 @@ def generate_interest_indication_matrix():
 def generate_user_interest_feature():
 	users_df = load_users()
 	for interest in interest_names:
-		users_df[interest+'score'] = -1.0
+		users_df[interest+'score'] = None
 	for index, row in users_df.iterrows():
 		for interest in interest_names:
 			score = []
+			weight = []
 			for interest_i in row[interest+'list']:
-				i_s = interest_item_to_gender(interest_i)
+				i_s, i_w = interest_item_to_gender(interest_i)
 				if i_s is not None:
 					score.append(i_s)
+					weight.append(i_w)
 			if len(score) > 0:
-				users_df.at[index, interest+'score'] = np.mean(score)
+				users_df.at[index, interest+'score'] = np.average(score, weights=weight)
 	for interest in interest_names:
 		del users_df[interest+'str']
 		del users_df[interest+'list']
@@ -83,20 +85,18 @@ def load_interest_indication_dict():
 def load_users_with_interest_scores():
 	return pd.read_pickle('./data/users_with_gender_interest_score.pkl')
 
-def interest_item_to_gender(interest_i, min_count=5): # min_count: the interest whose liked user number smaller than it will not be considered
+def interest_item_to_gender(interest_i, min_count=10): # min_count: the interest whose liked user number smaller than it will not be considered
 	if interest_i not in interest_ind:
-		return None
+		return None, None
 	gender1 = interest_ind[interest_i][1]
 	gender2 = interest_ind[interest_i][2]
 	total_liked_user_num = gender1 + gender2
 	if total_liked_user_num < min_count:
-		return None
+		return None, None
 	else:
-		return gender1*1.0/total_liked_user_num
+		return gender1*1.0/total_liked_user_num, 1.0/np.log(total_liked_user_num) # besides score, also return weight 1/log(N)
 
 
 if __name__ == "__main__":
-	users_df = load_users_with_interest_scores()
-	users_df_10000 = users_df.sample(10000)
-	users_df_10000.to_pickle('./data/users_with_gender_interest_score_10000.pkl')
-
+	interest_ind = load_interest_indication_dict()
+	generate_user_interest_feature()
