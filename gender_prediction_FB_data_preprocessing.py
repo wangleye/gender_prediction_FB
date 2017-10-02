@@ -96,8 +96,16 @@ def interest_item_to_gender(interest_i, min_count=5): # min_count: the interest 
 	else:
 		return gender1*1.0/total_liked_user_num, 1.0/np.log(total_liked_user_num) # besides score, also return weight 1/log(N)
 
-if __name__ == "__main__":
+def initialize_data_folder():
+	find_users()
+	preprocessing()
+	generate_interest_indication_matrix()
 	interest_ind = load_interest_indication_dict()
+	generate_user_interest_feature()
+
+if __name__ == "__main__":
+	# initialize_data_folder()
+
 	users_df = load_users_with_interest_scores()
 	users_df_sample = users_df.sample(20000).reset_index(drop=True)
 	users_df_sample.to_pickle('./data/users_with_gender_interest_score_20000.pkl')
