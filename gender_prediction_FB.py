@@ -15,11 +15,26 @@ def load_users_with_interest_scores():
 
 if __name__ == "__main__":
 	users_df = load_users_with_interest_scores()
+	print(users_df.describe())
 	users_df['nan_count'] = users_df.isnull().sum(axis=1) # count nan count for each user (row)
 	users_df = users_df[users_df['nan_count'] < 5] # users in the training and test at least get one score
 	users_df = users_df.reset_index(drop=True) # re-index all the users
 	print(users_df.sample(10))
 	print("total number of users: ", len(users_df))
+
+	# add users with hiding informations
+	# new_df = []
+	# for index, row in users_df.iterrows():
+	# 	for feature_name in features:
+	# 		if not np.isnan(row[feature_name]):
+	# 			new_row = row.copy()
+	# 			new_row[feature_name] = np.nan
+	# 			new_row['nan_count'] = row['nan_count'] + 1
+	# 			new_row['iduser'] = '{}_del_{}'.format(row['iduser'], feature_name)
+	# 			new_df.append(new_row)
+	# users_df = users_df.append(new_df)
+	# print(users_df.sample(10))
+	# print("total number of users including hiding one information:", len(users_df))
 
 	mean_imputer = Imputer()
 	y = np.array(users_df['gender'])
@@ -27,12 +42,13 @@ if __name__ == "__main__":
 
 	lr = LogisticRegression()
 	rf = RandomForestClassifier(100)
-	svc = SVC(probability=True)
+	svc_lr = SVC(kernel='linear', probability=True)
+	svc_sigmoid = SVC(kernel='sigmoid', probability=True)
 	knn = KNeighborsClassifier(50)
 
 	# classifier_models = [lr, rf, knn, svc]
-	classifier_models = [lr, rf, knn, svc]
-	classifier_names = ['lr', 'rf', 'knn', 'svc']
+	classifier_models = [lr, rf, knn, svc_lr, svc_sigmoid]
+	classifier_names = ['lr', 'rf', 'knn', 'svc_lr', 'svc_sigmoid']
 	
 	predict_y = np.zeros((len(users_df), len(classifier_models)))
 	predict_y_proba = np.zeros((len(users_df), len(classifier_models)))

@@ -8,9 +8,11 @@ from sklearn.metrics import f1_score
 from sklearn.calibration import CalibratedClassifierCV
 
 prediction_models = ['lr', 'rf', 'knn', 'svc']
+input_file_name = "users_with_gender_prediction_20000_with_hiding.pkl"
+output_file_name = "users_with_risk_proba_isotonic_20000_and_info_hiding.pkl"
 
 def load_users_with_prediction():
-	return pd.read_pickle('./data/users_with_gender_prediction_20000.pkl')
+	return pd.read_pickle('./data/{}'.format(input_file_name))
 
 if __name__ == "__main__":
 	users_df = load_users_with_prediction().reset_index(drop=True) # re-index all the instances
@@ -19,7 +21,7 @@ if __name__ == "__main__":
 
 	lr = CalibratedClassifierCV(LogisticRegression(), cv=3, method='isotonic')
 	rf = CalibratedClassifierCV(RandomForestClassifier(50), cv=3, method='isotonic')
-	svc = CalibratedClassifierCV(SVC(probability=True), cv=3, method='isotonic')
+	svc = CalibratedClassifierCV(SVC(probability=True, kernel='linear'), cv=3, method='isotonic')
 	risk_models = [lr, rf, svc]
 	risk_model_names = ['lr', 'rf', 'svc']
 
@@ -61,5 +63,5 @@ if __name__ == "__main__":
 
 		users_df[predict_model+'_risk_proba'] = predict_disclosure_proba[:, best_model]
 	
-	users_df.to_pickle('./data/users_with_risk_proba_isotonic_20000.pkl')
+	users_df.to_pickle('./data/{}'.output_file_name)
 	print(users_df.sample(100))
